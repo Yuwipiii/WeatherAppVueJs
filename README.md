@@ -1,4 +1,6 @@
-# weatherapp
+# Weather App
+The Api was used in the application Open Meteo.
+Link: https://open-meteo.com/en/docs
 
 ## Project setup
 ```
