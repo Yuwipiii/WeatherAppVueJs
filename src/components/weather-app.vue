@@ -13,17 +13,21 @@ export default {
       latitude: '',
       longitude: '',
       temperature: '',
+      message:''
     };
   },
   methods: {
     async getWeather() {
       if (this.country.length > 1) {
         let response = await axios.get(`https://geocoding-api.open-meteo.com/v1/search?name=${this.country}&count=1&language=en&format=json`);
-        this.country_show = response.data.results[0]['name'];
-        this.latitude = response.data.results[0]['latitude'];
-        this.longitude = response.data.results[0]['longitude'];
-        let weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${this.latitude}&longitude=${this.longitude}&current=temperature_2m`);
-        this.temperature = weather.data.current['temperature_2m'];
+        console.log(response.data);
+        if (response.data.results) {
+          this.country_show = response.data.results[0]['name'];
+          this.latitude = response.data.results[0]['latitude'];
+          this.longitude = response.data.results[0]['longitude'];
+          let weather = await axios.get(`https://api.open-meteo.com/v1/forecast?latitude=${this.latitude}&longitude=${this.longitude}&current=temperature_2m&timezone=auto`);
+          this.temperature = weather.data.current['temperature_2m'];
+        }
       }
     },
     todayDate() {
@@ -58,10 +62,8 @@ export default {
             {{ todayDate() }}
             <div>
               <time-current></time-current>
+              {{this.country_show}}
             </div>
-          </div>
-          <div class="location">
-            {{ this.country_show }}
           </div>
         </div>
         <div class="weather-box" v-if="temperature.length !== 0">
